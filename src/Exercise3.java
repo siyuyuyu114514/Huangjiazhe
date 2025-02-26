@@ -1,6 +1,10 @@
 import java.util.*;
 
 class SliceOHeaven {
+    public static final String DEF_ORDER_ID = "DEF-SOH-099";
+    public static final String DEF_PIZZA_INGREDIENTS = "Mozzarella Cheese";
+    public static final double DEF_ORDER_TOTAL = 15.00;
+    
     static final String STORE_NAME = "Slice-o-Heaven";
     static final String STORE_ADDRESS = "Pizza Streer";
     static final String STORE_EMAIL = "sliceoheaven@qq.com";
@@ -27,21 +31,59 @@ class SliceOHeaven {
         DRINKS.put("Cola", 3.00);
         DRINKS.put("Lemonade", 3.50);
     }
-    private static int orderCounter = 0;
-
-    private final int orderId;
+    
+    private final String orderId;
     private double orderTotal;
+    private String pizzaIngredients;
     private final List<String> orderItems = new ArrayList<>();
+    private List<String> sides = new ArrayList<>();
+    private List<String> drinks = new ArrayList<>();
 
     public SliceOHeaven(){
-        orderCounter++;
-        this.orderId = orderCounter;
+        this.orderId = DEF_ORDER_ID;
+        this.pizzaIngredients = DEF_PIZZA_INGREDIENTS;
+        this.orderTotal = DEF_ORDER_TOTAL;
+    }
+
+    public SliceOHeaven(String orderId, String pizzaIngredients, double orderTotal){
+        this.orderId = orderId;
+        this.pizzaIngredients = pizzaIngredients;
+        this.orderTotal = orderTotal;
+    }
+
+    public String getOrderId(){
+        return orderId;
+    } 
+
+    public double getOrderTotal(){
+        return orderTotal;
+    }
+
+    public void setOrderTotal(double orderTotal){
+        this.orderTotal = orderTotal;
+    }
+
+    public String getPizzaIngredients(){
+        return pizzaIngredients;
+    }
+    
+    public void setPizzaIngredients(String pizzaIngredients){
+        this.pizzaIngredients = pizzaIngredients;
     }
     
     public void takeOrder(List<String> pizzas, List<String> sides, List<String> drinks){
         processItems(pizzas, PIZZA_PRICE, "Pizza");
+        this.sides = sides;
+        this.drinks = drinks;
+        for (String side : sides){
+            orderItems.add("Side: " + side);
+        }
+        for (String drink : drinks){
+            orderItems.add("Drink: " + drink);
+        }
         processItems(sides, SIDES, "Side");
         processItems(drinks, DRINKS, "Drink");
+        printReceipt();
     }
 
     private void processItems(List<String> items, Map<String, Double> menu, String category){
